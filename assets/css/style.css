@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+/* Label */
+
+.acf-rating-field-label {
+	font-weight: bold;
+	padding-right: 10px;
+}
+
+/* Rating container */
+
+.acf-rating-field-rating-container {
+	display: inline-block;
+}
+
+.acf-rating-field-with-border .acf-rating-field-rating-container {
+	border-width: var(--acf_rating_field_border_width);
+	border-style: var(--acf_rating_field_border_style);
+	border-color: var(--acf_rating_field_border_color);
+	border-radius: var(--acf_rating_field_border_radius);
+}
+
+/* Rating */
+
+.acf-rating-field-rating::after {
+	content: attr(data-symbols);
+	vertical-align: middle;
+	background: linear-gradient(90deg, var(--acf_rating_field_filled_symbol_color) var(--acf_rating_field_percent), var(--acf_rating_field_symbol_color) var(--acf_rating_field_percent));
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	filter: drop-shadow(2px 2px 2px #0000002b);
+}
+
+.acf-rating-field-with-size .acf-rating-field-rating::after {
+	font-size: var(--acf_rating_field_symbol_size);
+}
+
+.acf-rating-field-with-spacing .acf-rating-field-rating::after {
+	letter-spacing: var(--acf_rating_field_symbol_spacing);
+}
+
+.acf-rating-field-with-top-padding .acf-rating-field-rating::after {
+	padding-top: var(--acf_rating_field_top_padding);
+}
+
+.acf-rating-field-with-right-padding .acf-rating-field-rating::after {
+	padding-right: var(--acf_rating_field_right_padding);
+}
+
+.acf-rating-field-with-bottom-padding .acf-rating-field-rating::after {
+	padding-bottom: var(--acf_rating_field_bottom_padding);
+}
+
+.acf-rating-field-with-left-padding .acf-rating-field-rating::after {
+	padding-left: var(--acf_rating_field_left_padding);
+}
