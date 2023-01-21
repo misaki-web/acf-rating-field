@@ -5,7 +5,7 @@
  * Description: Rating field for ACF supporting decimal numbers and custom icon (default icon is a star: ★).
  * Text Domain: acf-rating-field
  * Author: Misaki F.
- * Version: 1.0
+ * Version: 1.0.1
  */
 
 namespace AcfRatingField;
