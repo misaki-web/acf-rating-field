@@ -114,12 +114,33 @@ function shortcode($atts = array()) {
 	######
 
 	$field = get_field_object($atts['name'], $atts['id']);
-
 	$classes = 'acf-rating-field-container';
+	$style = '';
 	$label_html = '';
-	$style = '--acf_rating_field_value: ' . esc_attr($field['value']) . ';' .
+	$data_symbols = '';
+	$rating_percent = '';
+	$aria_label = '';
+	$blank_rating = false;
+	
+	if (!is_pos_float($field['value'])) {
+		$blank_rating = true;
+		$aria_label = __('No rating yet', 'acf-rating-field');
+		$field['value'] = 0;
+	}
+	
+	if (is_pos_float($field['max_value'], false)) {
+		$data_symbols = esc_attr(str_repeat($field['symbol'], $field['max_value']));
+		$rating_percent = $field['value'] / $field['max_value'] * 100;
+		$rating_percent .= '%';
+		
+		if (!$blank_rating) {
+			$aria_label = sprintf(__('Rating is %s out of %s', 'acf-rating-field'), esc_attr($field['value']), esc_attr($field['max_value']));
+		}
+	}
+	
+	$style .= '--acf_rating_field_value: ' . esc_attr($field['value']) . ';' .
 		' --acf_rating_field_max_value: ' . esc_attr($field['max_value']) . ';' .
-		' --acf_rating_field_percent: ' . esc_attr($field['max_value'] > 0 ? $field['value'] / $field['max_value'] * 100 : 0) . '%;' .
+		' --acf_rating_field_percent: ' . esc_attr($rating_percent) . ';' .
 		' --acf_rating_field_symbol: ' . esc_attr($field['symbol']) . ';' .
 		' --acf_rating_field_symbol_color: ' . esc_attr($field['symbol_color']) . ';' .
 		' --acf_rating_field_filled_symbol_color: ' . esc_attr($field['filled_symbol_color']) . ';';
@@ -147,6 +168,11 @@ function shortcode($atts = array()) {
 		$style .= ' --acf_rating_field_symbol_spacing: ' . esc_attr($field['symbol_spacing']) . 'px;';
 	}
 	
+	if ($blank_rating && $field['blank_rating_msg'] !== null && $field['blank_rating_msg'] !== '') {
+		$classes .= ' acf-rating-field-with-blank-rating-msg';
+		$style .= ' --acf_rating_field_blank_rating_msg_bg_color: ' . esc_attr($field['blank_rating_msg_bg_color']) . ';';
+	}
+	
 	if ($field['add_padding']) {
 		if (is_pos_int($field['top_padding'])) {
 			$classes .= ' acf-rating-field-with-top-padding';
@@ -169,12 +195,9 @@ function shortcode($atts = array()) {
 		}
 	}
 
-	$data_symbols = esc_attr(str_repeat($field['symbol'], $field['max_value']));
-	$aria_label = sprintf(__('Rating is %s out of %s', 'acf-rating-field'), esc_attr($field['value']), esc_attr($field['max_value']));
-
 	return '<div class="' . $classes . '" style="' . $style . '">' .
 		$label_html .
-		'<span class="acf-rating-field-rating-container">' .
+		'<span class="acf-rating-field-rating-container" data-blank-rating-msg="' . esc_attr($field['blank_rating_msg']) . '">' .
 		'<span class="acf-rating-field-rating" data-symbols="' . $data_symbols . '"' .
 		' aria-label="' . $aria_label . '" title="' . $aria_label . '"></span>' .
 		'</span>' .

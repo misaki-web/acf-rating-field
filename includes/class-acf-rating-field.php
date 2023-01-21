@@ -206,6 +206,31 @@ class acf_rating_field extends \acf_field {
 		acf_render_field_setting(
 			$field,
 			[
+				'name'         => 'blank_rating_msg',
+				'label'        => __('Blank rating message', 'acf-rating-field'),
+				'type'         => 'text',
+				'default_value' => 'No rating yet',
+				'hint'         => __('Enter the message displayed when no rating is given (leave empty to not display a message).', 'acf-rating-field'),
+			],
+		);
+		acf_render_field_setting(
+			$field,
+			[
+				'name'         => 'blank_rating_msg_bg_color',
+				'label'        => __('Background color of the blank rating message', 'acf-rating-field'),
+				'type'         => 'color_picker',
+				'conditions'   => [
+					'field'    => 'blank_rating_msg',
+					'operator' => '!=',
+					'value'    => '',
+				],
+				'default_value' => '#E0E0E078',
+				'hint'         => __('Choose the color of the message displayed when no rating is given.', 'acf-rating-field'),
+			],
+		);
+		acf_render_field_setting(
+			$field,
+			[
 				'name'         => 'add_border',
 				'label'        => __('Add border', 'acf-rating-field'),
 				'type'         => 'true_false',

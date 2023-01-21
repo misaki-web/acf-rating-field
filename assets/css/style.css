@@ -4,7 +4,7 @@
 
 .acf-rating-field-label {
 	font-weight: bold;
-	padding-right: 10px;
+	padding-right: 5px;
 }
 
 /* Rating container */
@@ -20,6 +20,26 @@
 	border-radius: var(--acf_rating_field_border_radius);
 }
 
+.acf-rating-field-with-blank-rating-msg .acf-rating-field-rating-container {
+	position: relative;
+}
+
+.acf-rating-field-with-blank-rating-msg .acf-rating-field-rating-container::before {
+	content: attr(data-blank-rating-msg);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1;
+	width: 100%;
+	margin-top: -4px;
+	padding-top: 4px;
+	font-weight: bold;
+	font-size: 1.2em;
+	text-align: center;
+	background-color: var(--acf_rating_field_blank_rating_msg_bg_color);
+}
+
 /* Rating */
 
 .acf-rating-field-rating::after {
@@ -32,7 +52,12 @@
 	filter: drop-shadow(2px 2px 2px #0000002b);
 }
 
+.acf-rating-field-with-blank-rating-msg .acf-rating-field-rating::after {
+	opacity: 0.8;
+}
+
 .acf-rating-field-with-size .acf-rating-field-rating::after {
+	padding-top: 2px;
 	font-size: var(--acf_rating_field_symbol_size);
 }
 
