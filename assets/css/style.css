@@ -35,7 +35,7 @@
 	margin-top: -4px;
 	padding-top: 4px;
 	font-weight: bold;
-	font-size: 1.2em;
+	font-size: 1em;
 	text-align: center;
 	background-color: var(--acf_rating_field_blank_rating_msg_bg_color);
 }
