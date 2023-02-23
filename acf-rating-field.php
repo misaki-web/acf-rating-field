@@ -59,6 +59,10 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts');
 ################################################################################
 
 function is_pos_int($value, $include_zero = true) {
+	if (!is_string($value)) {
+		$value = (string)$value;
+	}
+	
 	$min_range = $include_zero ? 0 : 1;
 	$options = [
 		'options' => ['min_range' => $min_range],
@@ -68,6 +72,10 @@ function is_pos_int($value, $include_zero = true) {
 }
 
 function is_pos_float($value, $include_zero = true) {
+	if (!is_string($value)) {
+		$value = (string)$value;
+	}
+	
 	return !str_starts_with($value, '+') && filter_var($value, FILTER_VALIDATE_FLOAT) !== false && $value >= 0 && ($include_zero || $value > 0);
 }
 
@@ -114,6 +122,33 @@ function shortcode($atts = array()) {
 	######
 
 	$field = get_field_object($atts['name'], $atts['id']);
+	
+	if ($field === false) {
+		$field = [
+			'add_border' => true,
+			'add_padding' => true,
+			'blank_rating_msg' => 'No rating yet',
+			'blank_rating_msg_bg_color' => '#E0E0E078',
+			'border_color' => '#B3B3B3',
+			'border_radius' => 4,
+			'border_style' => 'solid',
+			'border_width' => 2,
+			'bottom_padding' => 0,
+			'filled_symbol_color' => '#FED617',
+			'label_text' => 'Rating:',
+			'left_padding' => 5,
+			'max_value' => 5,
+			'right_padding' => 5,
+			'symbol' => '★',
+			'symbol_color' => '#B3B3B3',
+			'symbol_size' => 2.50,
+			'symbol_size_unit' => 'em',
+			'symbol_spacing' => 2,
+			'top_padding' => 0,
+			'value' => '',
+		];
+	}
+	
 	$classes = 'acf-rating-field-container';
 	$style = '';
 	$label_html = '';
