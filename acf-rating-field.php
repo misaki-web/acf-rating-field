@@ -62,7 +62,7 @@ function is_pos_int($value, $include_zero = true) {
 	if (!is_string($value)) {
 		$value = (string)$value;
 	}
-	
+
 	$min_range = $include_zero ? 0 : 1;
 	$options = [
 		'options' => ['min_range' => $min_range],
@@ -75,7 +75,7 @@ function is_pos_float($value, $include_zero = true) {
 	if (!is_string($value)) {
 		$value = (string)$value;
 	}
-	
+
 	return !str_starts_with($value, '+') && filter_var($value, FILTER_VALIDATE_FLOAT) !== false && $value >= 0 && ($include_zero || $value > 0);
 }
 
@@ -122,7 +122,7 @@ function shortcode($atts = array()) {
 	######
 
 	$field = get_field_object($atts['name'], $atts['id']);
-	
+
 	if ($field === false) {
 		$field = [
 			'add_border' => true,
@@ -149,7 +149,7 @@ function shortcode($atts = array()) {
 			'value' => '',
 		];
 	}
-	
+
 	$classes = 'acf-rating-field-container';
 	$style = '';
 	$label_html = '';
@@ -158,23 +158,23 @@ function shortcode($atts = array()) {
 	$aria_label = '';
 	$blank_rating = false;
 	$symbol = !empty($field['custom_symbol']) ? $field['custom_symbol'] : $field['symbol'];
-	
+
 	if (!is_pos_float($field['value'])) {
 		$blank_rating = true;
 		$aria_label = __('No rating yet', 'acf-rating-field');
 		$field['value'] = 0;
 	}
-	
+
 	if (is_pos_float($field['max_value'], false)) {
 		$data_symbols = esc_attr(str_repeat($symbol, $field['max_value']));
 		$rating_percent = $field['value'] / $field['max_value'] * 100;
 		$rating_percent .= '%';
-		
+
 		if (!$blank_rating) {
 			$aria_label = sprintf(__('Rating is %s out of %s', 'acf-rating-field'), esc_attr($field['value']), esc_attr($field['max_value']));
 		}
 	}
-	
+
 	$style .= '--acf_rating_field_value: ' . esc_attr($field['value']) . ';' .
 		' --acf_rating_field_max_value: ' . esc_attr($field['max_value']) . ';' .
 		' --acf_rating_field_percent: ' . esc_attr($rating_percent) . ';' .
@@ -199,17 +199,17 @@ function shortcode($atts = array()) {
 		$classes .= ' acf-rating-field-with-size';
 		$style .= ' --acf_rating_field_symbol_size: ' . esc_attr($field['symbol_size'] . $field['symbol_size_unit']) . ';';
 	}
-	
+
 	if (is_pos_int($field['symbol_spacing'])) {
 		$classes .= ' acf-rating-field-with-spacing';
 		$style .= ' --acf_rating_field_symbol_spacing: ' . esc_attr($field['symbol_spacing']) . 'px;';
 	}
-	
+
 	if ($blank_rating && $field['blank_rating_msg'] !== null && $field['blank_rating_msg'] !== '') {
 		$classes .= ' acf-rating-field-with-blank-rating-msg';
 		$style .= ' --acf_rating_field_blank_rating_msg_bg_color: ' . esc_attr($field['blank_rating_msg_bg_color']) . ';';
 	}
-	
+
 	if ($field['add_padding']) {
 		if (is_pos_int($field['top_padding'])) {
 			$classes .= ' acf-rating-field-with-top-padding';
