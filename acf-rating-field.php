@@ -140,6 +140,7 @@ function shortcode($atts = array()) {
 			'max_value' => 5,
 			'right_padding' => 5,
 			'symbol' => '★',
+			'custom_symbol' => '',
 			'symbol_color' => '#B3B3B3',
 			'symbol_size' => 2.50,
 			'symbol_size_unit' => 'em',
@@ -156,6 +157,7 @@ function shortcode($atts = array()) {
 	$rating_percent = '';
 	$aria_label = '';
 	$blank_rating = false;
+	$symbol = !empty($field['custom_symbol']) ? $field['custom_symbol'] : $field['symbol'];
 	
 	if (!is_pos_float($field['value'])) {
 		$blank_rating = true;
@@ -164,7 +166,7 @@ function shortcode($atts = array()) {
 	}
 	
 	if (is_pos_float($field['max_value'], false)) {
-		$data_symbols = esc_attr(str_repeat($field['symbol'], $field['max_value']));
+		$data_symbols = esc_attr(str_repeat($symbol, $field['max_value']));
 		$rating_percent = $field['value'] / $field['max_value'] * 100;
 		$rating_percent .= '%';
 		
@@ -176,7 +178,7 @@ function shortcode($atts = array()) {
 	$style .= '--acf_rating_field_value: ' . esc_attr($field['value']) . ';' .
 		' --acf_rating_field_max_value: ' . esc_attr($field['max_value']) . ';' .
 		' --acf_rating_field_percent: ' . esc_attr($rating_percent) . ';' .
-		' --acf_rating_field_symbol: ' . esc_attr($field['symbol']) . ';' .
+		' --acf_rating_field_symbol: ' . esc_attr($symbol) . ';' .
 		' --acf_rating_field_symbol_color: ' . esc_attr($field['symbol_color']) . ';' .
 		' --acf_rating_field_filled_symbol_color: ' . esc_attr($field['filled_symbol_color']) . ';';
 

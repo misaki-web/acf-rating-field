@@ -132,7 +132,16 @@ class acf_rating_field extends \acf_field {
 				],
 				'required'     => true,
 				'default_value' => '★',
-				'hint'         => __('Choose a symbol from those listed or enter a new one.', 'acf-rating-field'),
+				'hint'         => __('Choose a symbol from those listed.', 'acf-rating-field'),
+			],
+		);
+		acf_render_field_setting(
+			$field,
+			[
+				'name'         => 'custom_symbol',
+				'label'        => __('Custom symbol', 'acf-rating-field'),
+				'type'         => 'text',
+				'hint'         => __('Enter a custom symbol if none of the predefined ones are suitable.', 'acf-rating-field'),
 			],
 		);
 		acf_render_field_setting(
@@ -411,10 +420,11 @@ class acf_rating_field extends \acf_field {
 	 * @return void
 	 */
 	public function render_field($field) {
+		$symbol = !empty($field['custom_symbol']) ? $field['custom_symbol'] : $field['symbol'];
 		echo '<input class="acf-rating-field-input" ' .
 			'name="' . esc_attr($field['name']) . '" ' .
 			'type="number" min="0" max="' . esc_attr($field['max_value']) . '" ' .
 			'step="' . esc_attr($field['step_size']) . '" ' .
-			'value="' . esc_attr($field['value']) . '" />';
+			'value="' . esc_attr($symbol) . '" />';
 	}
 }
