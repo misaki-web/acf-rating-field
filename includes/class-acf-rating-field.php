@@ -425,6 +425,6 @@ class acf_rating_field extends \acf_field {
 			'name="' . esc_attr($field['name']) . '" ' .
 			'type="number" min="0" max="' . esc_attr($field['max_value']) . '" ' .
 			'step="' . esc_attr($field['step_size']) . '" ' .
-			'value="' . esc_attr($symbol) . '" />';
+			'value="' . esc_attr($field['value']) . '" />';
 	}
 }
