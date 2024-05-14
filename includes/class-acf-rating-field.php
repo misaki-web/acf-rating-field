@@ -106,7 +106,7 @@ class acf_rating_field extends \acf_field {
 			[
 				'name'         => 'symbol',
 				'label'        => __('Symbol', 'acf-rating-field'),
-				'type'         => 'custom_terms',
+				'type'         => 'select',
 				'choices'      => [
 					'★' => '★',
 					'✭' => '✭',
