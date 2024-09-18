@@ -1,5 +1,105 @@
 @charset "UTF-8";
 
+/*
+################################################################################
+## @title Editor
+################################################################################
+*/
+
+.acf-rating-field-edit-input-container .acf-rating-field-edit-symbol {
+	color: var(--acf_rating_field_filled_symbol_color);
+	font-size: 1.5rem;
+}
+
+.acf-rating-field-edit-input-container .acf-rating-field-edit-input[type] {
+	height: fit-content;
+	font-size: 1.1rem;
+}
+
+/* Number input */
+
+.acf-rating-field-edit-input-number-container {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.acf-rating-field-edit-input-number-container .acf-rating-field-edit-input {
+	max-width: 100px;
+}
+
+/* Radio box */
+
+.acf-rating-field-edit-input-radio-container {
+	display: flex;
+	gap: 15px;
+}
+
+.acf-rating-field-edit-input-radio-container .acf-rating-field-edit-label {
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	padding: 0 10px 0 5px;
+	background-color: #f2f2f2;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	color: #111;
+	font-weight: 700;
+}
+
+.acf-rating-field-edit-input-radio-container .acf-rating-field-edit-input {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.acf-rating-field-edit-input-radio-container .acf-rating-field-edit-value {
+	padding-top: 4px;
+}
+
+/* Radio box with symbols */
+
+.acf-rating-field-edit-input-radio-symbols-container {
+	display: flex;
+	gap: 0;
+}
+
+.acf-rating-field-edit-input-radio-symbols-container .acf-rating-field-edit-label {
+	line-height: 1;
+}
+
+.acf-rating-field-edit-input-radio-symbols-container .acf-rating-field-edit-input {
+	display: none !important;
+}
+
+.acf-rating-field-edit-input-radio-symbols-container .acf-rating-field-edit-symbol {
+	font-size: 2.5rem;
+	cursor: pointer;
+}
+
+.acf-rating-field-edit-input-radio-symbols-container .acf-rating-field-edit-symbol:not(.acf-rating-field-edit-symbol-filled) {
+	color: var(--acf_rating_field_symbol_color);
+}
+
+/* Range input */
+
+.acf-rating-field-edit-input-range-container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.acf-rating-field-edit-input-range-container .acf-rating-field-edit-input {
+	max-width: 200px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+/*
+################################################################################
+## @title Display
+################################################################################
+*/
+
 /* Label */
 
 .acf-rating-field-label {

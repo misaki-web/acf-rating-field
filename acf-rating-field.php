@@ -5,7 +5,7 @@
  * Description: Rating field for ACF supporting decimal numbers and custom icon (default icon is a star: ★).
  * Text Domain: acf-rating-field
  * Author: Misaki F.
- * Version: 1.0.7
+ * Version: 1.0.8
  */
 
 namespace AcfRatingField;
@@ -15,18 +15,20 @@ if (!defined('ABSPATH')) {
 }
 
 ################################################################################
-#
-# INCLUSIONS
-#
+# @title Constants
+################################################################################
+
+define('ACF_RATING_FIELD_VERSION', '1.0.8');
+
+################################################################################
+## @title Inclusions
 ################################################################################
 
 require_once(__DIR__ . '/includes/init.php');
 require_once(__DIR__ . '/includes/plugin-update-checker/plugin-update-checker.php');
 
 ################################################################################
-#
-# Update checker
-#
+## @title Update checker
 ################################################################################
 
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
@@ -40,22 +42,41 @@ $update_checker = PucFactory::buildUpdateChecker(
 $update_checker->getVcsApi()->enableReleaseAssets();
 
 ################################################################################
-#
-# ASSETS
-#
+## @title Assets
 ################################################################################
+
+########################################
+## @subtitle Backend
+########################################
+
+function enqueue_admin_scripts($hook) {
+	if (in_array($hook, ['comment.php', 'post.php', 'post-new.php'])) {
+		$url_dir = plugin_dir_url(__FILE__);
+
+		wp_enqueue_style('acf-rating-field-css', $url_dir . '/assets/css/style.css');
+
+		wp_register_script('acf-rating-field-js', $url_dir . '/assets/js/arf.js', ['jquery'], ACF_RATING_FIELD_VERSION, true);
+		wp_enqueue_script('acf-rating-field-js');
+	}
+}
+add_action('admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_admin_scripts');
+
+########################################
+## @subtitle Frontend
+########################################
 
 function enqueue_scripts() {
 	$url_dir = plugin_dir_url(__FILE__);
 
 	wp_enqueue_style('acf-rating-field-css', $url_dir . '/assets/css/style.css');
+
+	wp_register_script('acf-rating-field-js', $url_dir . '/assets/js/arf.js', ['jquery'], ACF_RATING_FIELD_VERSION, true);
+	wp_enqueue_script('acf-rating-field-js');
 }
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts');
 
 ################################################################################
-#
-# HELPER FUNCTIONS
-#
+## @title Helper functions
 ################################################################################
 
 function is_pos_int($value, $include_zero = true) {
@@ -80,9 +101,7 @@ function is_pos_float($value, $include_zero = true) {
 }
 
 ################################################################################
-#
-# SHORTCODES
-#
+## @title Shortcodes
 ################################################################################
 
 # Render the shortcode "acf_rating_field".
@@ -91,38 +110,49 @@ function shortcode($atts = array()) {
 	###################
 
 	$default_atts = [
-		'name' => '',
-		'type' => 'post',
 		'id' => -1,
+		'name' => '',
+		'style' => 'custom',
+		'type' => 'post',
+		'value' => '',
 	];
 
 	# Get final arguments
 	#####################
 
 	$atts = wp_parse_args($atts, $default_atts);
-	extract($atts);
-
-	if ($atts['type'] != 'post' && $atts['type'] != 'user') {
-		$atts['type'] = 'post';
+	
+	if ($atts['style'] != 'custom' && $atts['style'] != 'simple') {
+		$atts['style'] = $default_atts['style'];
 	}
-
-	if (!is_pos_int($atts['id'], false)) {
-		if ($atts['type'] == 'post') {
-			$atts['id'] = get_the_ID();
+	
+	if (!empty($atts['name'])) {
+		if ($atts['type'] != 'comment' && $atts['type'] != 'post' && $atts['type'] != 'user') {
+			$atts['type'] = $default_atts['type'];
+		}
+		
+		if (!is_pos_int($atts['id'], false)) {
+			if ($atts['type'] == 'comment') {
+				$atts['id'] = get_comment_ID();
+			} else if ($atts['type'] == 'post') {
+				$atts['id'] = get_the_ID();
+			} else if ($atts['type'] == 'user') {
+				$atts['id'] = get_current_user_id();
+			}
+		}
+		
+		if ($atts['type'] == 'comment') {
+			$atts['id'] = 'comment_' . $atts['id'];
 		} else if ($atts['type'] == 'user') {
-			$atts['id'] = get_current_user_id();
+			$atts['id'] = 'user_' . $atts['id'];
 		}
 	}
-
-	if ($atts['type'] == 'user') {
-		$atts['id'] = 'user_' . $atts['id'];
-	}
-
+	
 	# HTML
 	######
-
-	$field = get_field_object($atts['name'], $atts['id']);
-
+	
+	$field = !empty($atts['name']) ? get_field_object($atts['name'], $atts['id']) : false;
+	
 	if ($field === false) {
 		$field = [
 			'add_border' => true,
@@ -143,11 +173,22 @@ function shortcode($atts = array()) {
 			'custom_symbol' => '',
 			'symbol_color' => '#B3B3B3',
 			'symbol_size' => 2.50,
-			'symbol_size_unit' => 'em',
+			'symbol_size_unit' => 'rem',
 			'symbol_spacing' => 2,
 			'top_padding' => 0,
 			'value' => '',
 		];
+	}
+	
+	if ($atts['style'] == 'simple') {
+		$field['add_border'] = false;
+		$field['add_padding'] = false;
+		$field['blank_rating_msg'] = '';
+		$field['label_text'] = '';
+	}
+	
+	if ($atts['value'] !== '') {
+		$field['value'] = sanitize_text_field($atts['value']);
 	}
 
 	$classes = 'acf-rating-field-container';

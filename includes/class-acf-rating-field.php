@@ -75,6 +75,19 @@ class acf_rating_field extends \acf_field {
 		acf_render_field_setting(
 			$field,
 			[
+				'name'         => 'min_value',
+				'label'        => __('Min value', 'acf-rating-field'),
+				'type'         => 'number',
+				'min'          => 0,
+				'step'         => 1,
+				'required'     => true,
+				'default_value' => 0,
+				'hint'         => __('Enter the min value (it must be a positive integer or zero).', 'acf-rating-field'),
+			],
+		);
+		acf_render_field_setting(
+			$field,
+			[
 				'name'         => 'max_value',
 				'label'        => __('Max value', 'acf-rating-field'),
 				'type'         => 'number',
@@ -99,6 +112,23 @@ class acf_rating_field extends \acf_field {
 				'required'     => true,
 				'default_value' => '0.1',
 				'hint'         => __('Enter the step size. If the step is 0.01, ratings like 3.75 will be possible. If the step is 0.1, it\'ll be ratings like 3.8. If the step is 1, ratings will be integers (like 4).', 'acf-rating-field'),
+			],
+		);
+		acf_render_field_setting(
+			$field,
+			[
+				'name'         => 'input_type',
+				'label'        => __('Input type', 'acf-rating-field'),
+				'type'         => 'select',
+				'choices'      => [
+					'number' => __('Number input', 'acf-rating-field'),
+					'radio'  => __('Radio box', 'acf-rating-field'),
+					'radio-symbols'  => __('Radio box with symbols', 'acf-rating-field'),
+					'range'  => __('Range input', 'acf-rating-field'),
+				],
+				'required'     => true,
+				'default_value' => 'number',
+				'hint'         => __('Select the input type to display in the editor.', 'acf-rating-field'),
 			],
 		);
 		acf_render_field_setting(
@@ -173,7 +203,7 @@ class acf_rating_field extends \acf_field {
 					'value'    => '',
 				],
 				'required'     => true,
-				'default_value' => 'em',
+				'default_value' => 'rem',
 				'hint'         => __('Choose the symbol size unit.', 'acf-rating-field'),
 			],
 		);
@@ -420,11 +450,74 @@ class acf_rating_field extends \acf_field {
 	 * @return void
 	 */
 	public function render_field($field) {
+		$name = esc_attr($field['name']);
+		$min = esc_attr($field['min_value']);
+		$max = esc_attr($field['max_value']);
+		$step = esc_attr($field['step_size']);
+		$value = esc_attr($field['value']);
+		
 		$symbol = !empty($field['custom_symbol']) ? $field['custom_symbol'] : $field['symbol'];
-		echo '<input class="acf-rating-field-input" ' .
-			'name="' . esc_attr($field['name']) . '" ' .
-			'type="number" min="0" max="' . esc_attr($field['max_value']) . '" ' .
-			'step="' . esc_attr($field['step_size']) . '" ' .
-			'value="' . esc_attr($field['value']) . '" />';
+		$symbol = esc_html($symbol);
+		$symbol_color = esc_attr($field['symbol_color']);
+		$filled_symbol_color = esc_attr($field['filled_symbol_color']);
+		$symbol_html = <<<HTML
+			<span class="acf-rating-field-edit-symbol"
+				style="--acf_rating_field_filled_symbol_color: $filled_symbol_color; --acf_rating_field_symbol_color: $symbol_color;">$symbol</span>
+		HTML;
+		
+		$input_type = !empty($field['input_type']) ? $field['input_type'] : 'number';
+		
+		# Number input
+		if ($input_type == 'number') {
+			$field = <<<HTML
+				<div class="acf-rating-field-edit-input-container acf-rating-field-edit-input-number-container">
+					<input class="acf-rating-field-edit-input" name="$name" type="number" min="$min" max="$max" step="$step" value="$value">
+					$symbol_html
+				</div>
+			HTML;
+		}
+		
+		# Radio box | Radio box with symbols
+		else if ($input_type == 'radio' || $input_type == 'radio-symbols') {
+			$radio = '';
+			
+			for ($i = $min; $i <= $max; $i++) {
+				$checked = checked($value, $i, false);
+				$text_html = '';
+				
+				if ($input_type == 'radio') {
+					$text_html = '<span class="acf-rating-field-edit-value">' . $i . '</span>';
+				} else if ($input_type == 'radio-symbols') {
+					$text_html = $symbol_html;
+				}
+				
+				$radio .= <<<HTML
+					<label class="acf-rating-field-edit-label">
+						<input class="acf-rating-field-edit-input" name="$name" type="radio" value="$i" $checked>
+						$text_html
+					</label>
+				HTML;
+			}
+			
+			$field = <<<HTML
+				<div class="acf-rating-field-edit-input-container acf-rating-field-edit-input-$input_type-container">
+					$radio
+				</div>
+			HTML;
+		}
+		
+		# Range input
+		else if ($input_type == 'range') {
+			$field = <<<HTML
+				<div class="acf-rating-field-edit-input-container acf-rating-field-edit-input-range-container">
+					<input class="acf-rating-field-edit-input" name="$name" type="range" min="$min" max="$max" step="$step" value="$value"
+						oninput="this.nextElementSibling.value = this.value">
+					<output class="acf-rating-field-edit-value">$value</output>
+					$symbol_html
+				</div>
+			HTML;
+		}
+
+		echo $field;
 	}
 }

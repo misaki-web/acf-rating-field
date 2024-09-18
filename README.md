@@ -40,6 +40,14 @@ To get the field value from another post, use the attribute `id`:
 
 	[acf_rating_field name="FIELD_NAME" id="POST_ID"]
 
+If the rating field is linked to a comment, set the type `comment` in the shortcode. By default, it'll look at custom fields for the current comment:
+
+	[acf_rating_field name="FIELD_NAME" type="comment"]
+
+To specify a specific comment, set the attribute `id`:
+
+	[acf_rating_field name="FIELD_NAME" type="comment" id="COMMENT_ID"]
+
 If the rating field is linked to a user, set the type `user` in the shortcode. By default, it'll look at custom fields for the current user:
 
 	[acf_rating_field name="FIELD_NAME" type="user"]
@@ -47,6 +55,16 @@ If the rating field is linked to a user, set the type `user` in the shortcode. B
 To specify a specific user, set the attribute `id`:
 
 	[acf_rating_field name="FIELD_NAME" type="user" id="USER_ID"]
+
+#### Displaying rating with custom value
+
+The `value` attribute allows you to display a rating with a custom value, independently or alongside an existing field. If `value` is specified and `name` is provided, the rating will use the style of the specified field instead of the default style:
+
+	[acf_rating_field name="FIELD_NAME" value="3.6"]
+
+You can define the rating style using the `style` attribute. Available styles are `custom` or `simple`:
+
+	[acf_rating_field style="simple" value="3.6"]
 
 ## License
 
