@@ -5,7 +5,7 @@
  * Description: Rating field for ACF supporting decimal numbers and custom icon (default icon is a star: ★).
  * Text Domain: acf-rating-field
  * Author: Misaki F.
- * Version: 1.0.9
+ * Version: 1.0.10
  */
 
 namespace AcfRatingField;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 # @title Constants
 ################################################################################
 
-define('ACF_RATING_FIELD_VERSION', '1.0.9');
+define('ACF_RATING_FIELD_VERSION', '1.0.10');
 
 ################################################################################
 ## @title Inclusions
@@ -53,7 +53,7 @@ function enqueue_admin_scripts($hook) {
 	if (in_array($hook, ['comment.php', 'post.php', 'post-new.php'])) {
 		$url_dir = plugin_dir_url(__FILE__);
 
-		wp_enqueue_style('acf-rating-field-css', $url_dir . '/assets/css/style.css');
+		wp_enqueue_style('acf-rating-field-css', $url_dir . '/assets/css/style.css', [], ACF_RATING_FIELD_VERSION);
 
 		wp_register_script('acf-rating-field-js', $url_dir . '/assets/js/arf.js', ['jquery'], ACF_RATING_FIELD_VERSION, true);
 		wp_enqueue_script('acf-rating-field-js');
@@ -68,7 +68,7 @@ add_action('admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_admin_scripts');
 function enqueue_scripts() {
 	$url_dir = plugin_dir_url(__FILE__);
 
-	wp_enqueue_style('acf-rating-field-css', $url_dir . '/assets/css/style.css');
+	wp_enqueue_style('acf-rating-field-css', $url_dir . '/assets/css/style.css', [], ACF_RATING_FIELD_VERSION);
 
 	wp_register_script('acf-rating-field-js', $url_dir . '/assets/js/arf.js', ['jquery'], ACF_RATING_FIELD_VERSION, true);
 	wp_enqueue_script('acf-rating-field-js');
